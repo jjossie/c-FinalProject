@@ -10,14 +10,14 @@ using std::string;
 class Coordinate {
 public:
     explicit Coordinate(const string &coordString);
-    Coordinate(unsigned row, unsigned col);
-    unsigned getRow() const;
-    unsigned getCol() const;
+    Coordinate(int row, int col);
+    int getRow() const;
+    int getCol() const;
     string toString() const;
     bool isValid() const;
 private:
-    unsigned row;
-    unsigned col;
+    int row;
+    int col;
     bool valid;
     /**
      * Parses a two-character string containing a letter and number into a Coordinate.

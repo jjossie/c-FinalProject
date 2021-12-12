@@ -16,8 +16,8 @@ using std::string;
 
 struct Move {
     Coordinate coordinate;
-    unsigned value;
-    unsigned old_value;
+    int value;
+    int old_value;
 };
 
 struct Square {
@@ -31,15 +31,16 @@ public:
      * Creates a new board by reading it in from a file.
      * @param filename The name of the JSON file containing the board object.
      */
-    Board(const string &filename);
+    explicit Board(const string &filename);
 //    void save() const; // We may not need this one.
     void save(const string &filename) const;
     void display() const;
-    Square getSquare(Coordinate coordinate);
+    Square getSquare(Coordinate coordinate) const;
     bool isMoveValid(Move move) const;
-    list<Move> getValidMoves() const;
-    void editSquare(Coordinate coordinate);
-    void undoMove();
+    list<Move> getValidMoves(Coordinate coordinate) const;
+    void playTurn(Coordinate coordinate);
+    void executeMove(Move move);
+    void undoMove(Move move);
 
 private:
     Square board[9][9]{};

@@ -1,0 +1,9 @@
+0t|0t|0t|0t|0t|0t|0t|0t|0t|
+0t|0t|0t|0t|0t|3f|0t|8f|5f|
+0t|0t|1f|0t|2f|0t|0t|0t|0t|
+0t|0t|0t|5f|0t|7f|0t|0t|0t|
+0t|0t|4f|0t|0t|0t|1f|0t|0t|
+0t|9f|0t|0t|0t|0t|0t|0t|0t|
+5f|0t|0t|0t|0t|0t|0t|7f|3f|
+0t|0t|2f|0t|1f|0t|0t|0t|0t|
+0t|0t|0t|0t|4f|0t|0t|0t|9f|

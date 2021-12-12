@@ -39,9 +39,9 @@ bool Coordinate::parseCoordinate(const string &coordString) {
         return true;
 }
 
-unsigned Coordinate::getRow() const { return row; }
+int Coordinate::getRow() const { return row; }
 
-unsigned Coordinate::getCol() const { return col; }
+int Coordinate::getCol() const { return col; }
 
 string Coordinate::toString() const {
     stringstream ss;
@@ -53,6 +53,6 @@ bool Coordinate::isValid() const {
     return valid;
 }
 
-Coordinate::Coordinate(unsigned int row, unsigned int col) : row(row), col(col) {
+Coordinate::Coordinate(int row, int col) : row(row), col(col) {
     valid = ((0 <= row && row <= 8) && (0 <= col && col <= 8));
 }
