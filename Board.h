@@ -4,9 +4,12 @@
 
 #ifndef WEEK_6_BOARD_H
 #define WEEK_6_BOARD_H
+#include "Coordinate.h"
 #include <list>
 #include <string>
-#include "Coordinate.h"
+#include <sstream>
+#include <iostream>
+#include <fstream>
 
 using std::list;
 using std::string;
@@ -18,15 +21,19 @@ struct Move {
 };
 
 struct Square {
-    unsigned value;
+    int value;
     bool editable;
 };
 
 class Board {
 public:
-    Board(string filename);
-    void save() const;
-    void save(string filename) const;
+    /**
+     * Creates a new board by reading it in from a file.
+     * @param filename The name of the JSON file containing the board object.
+     */
+    Board(const string &filename);
+//    void save() const; // We may not need this one.
+    void save(const string &filename) const;
     void display() const;
     Square getSquare(Coordinate coordinate);
     bool isMoveValid(Move move) const;
@@ -35,9 +42,9 @@ public:
     void undoMove();
 
 private:
-    Square board[9][9];
+    Square board[9][9]{};
     list<Move> moveHistory;
-    void load(string filename);
+    void load(const string &filename);
 };
 
 #endif //WEEK_6_BOARD_H
