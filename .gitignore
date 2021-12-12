@@ -1,3 +1,8 @@
 /cmake-build-debug/.cmake/
 /cmake-build-debug/CMakeFiles/
 /cmake-build-debug/Testing/
+/cmake-build-debug/.ninja_deps
+/cmake-build-debug/.ninja_log
+/cmake-build-debug/Week_6.exe
+/cmake-build-debug/Week_6.ilk
+/cmake-build-debug/Week_6.pdb
