@@ -6,6 +6,7 @@
 #define WEEK_6_BOARD_H
 #include "Coordinate.h"
 #include <list>
+#include <stack>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -17,6 +18,14 @@ using std::string;
 using std::exception;
 
 struct UserAbortException : public exception
+{
+    const char * what () const noexcept
+    {
+        return "User Cancelled Action";
+    }
+};
+
+struct FileException : public exception
 {
     const char * what () const noexcept
     {
@@ -50,6 +59,11 @@ public:
     list<Move> getValidMoves(Coordinate coordinate) const;
 //    void playTurn(Coordinate coordinate);
     void executeMove(Move move);
+    /**
+     * Prompts the user for a coordinate to edit on the board, then calls
+     * getUserValue() to obtain a valid move at a given coordinate.
+     * @return The Move the user decided to execute.
+     */
     Move getUserMove();
     void undoMove(Move move);
 

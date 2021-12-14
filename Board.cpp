@@ -43,8 +43,9 @@ void Board::save(const string &filename) const {
     // open a file for writing
     ofstream f_out(filename);
     if (f_out.fail()) {
-        cout << "Unable to write to " << filename << endl;
-        return;
+        throw FileException();
+    } else {
+        cout << "Saving to \"" << filename << "\"." << endl;
     }
 
     for (const auto & iRow : board) {
@@ -62,7 +63,7 @@ void Board::load(const string &filename) {
     ifstream f_in(filename);
     if (f_in.fail()) {
         cout << "Error, unable to open file " << filename << endl;
-        return;
+        throw FileException();
     }
     int iRow = 0;
     // Loop through each line in the file

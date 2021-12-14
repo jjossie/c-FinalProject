@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <string>
 #include <memory>
 #include "Coordinate.h"
@@ -38,6 +39,60 @@ void test_getUserMove(){
 int main() {
 //    test_coordToString();
 //    test_isMoveValid();
-    test_getUserMove();
+//    test_getUserMove();
+
+    // Main Program Control
+
+    // Load a board
+    string filename;
+    shared_ptr<Board> board;
+    while (true){
+        // Prompt for file
+        cout << "Where is your board file located?" << endl;
+        cin >> filename;
+        try{
+            board = make_shared<Board>(filename);
+            break;
+        } catch (FileException &fe){
+            // File not found
+            cout << "Unable to open file \"" << filename << "\"." << endl;
+        }
+    }
+
+    // Play the game
+
+    while (true){
+        try{
+            board->display();
+            Move move = board->getUserMove();
+            board->executeMove(move);
+        } catch (UserAbortException &uae) {
+            // User wants to save and quit
+            break;
+        }
+    }
+
+    // Save and Quit
+    string newFilename;
+    while (true) {
+        cout << "Where would you like to save your board? (press enter to accept default \"" << filename << "\")."
+             << endl;
+        cin.ignore();
+        getline(cin, newFilename, '\n');
+        if (newFilename.empty()) {
+            board->save(filename);
+            cout << endl << "Saved Successfully. Goodbye!" << endl;
+            break;
+        } else {
+            try {
+                board->save(newFilename);
+                cout << endl << "Saved Successfully. Goodbye!" << endl;
+                break;
+            } catch (FileException &fe) {
+                cout << "Unable to write to " << filename << endl;
+            }
+        }
+    }
+
     return 0;
 }
