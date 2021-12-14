@@ -10,6 +10,10 @@ Coordinate::Coordinate(const string &coordString) { // NOLINT(cppcoreguidelines-
     valid = parseCoordinate(coordString);
 }
 
+Coordinate::Coordinate(int row, int col) : row(row), col(col) {
+    valid = ((0 <= row && row <= 8) && (0 <= col && col <= 8));
+}
+
 bool Coordinate::parseCoordinate(const string &coordString) {
     // Make sure we at least have two values
     if (coordString.length() < 2 )
@@ -22,7 +26,7 @@ bool Coordinate::parseCoordinate(const string &coordString) {
             int number =  int((unsigned char)coordString[i]) - int('0') - 1;
             if( 0 <= number && number <= 9){
                 numberUsed = true;
-                row = (unsigned)number;
+                row = number;
             }
         }
         else if (isalpha(coordString[i]) && !letterUsed){
@@ -44,15 +48,10 @@ int Coordinate::getRow() const { return row; }
 int Coordinate::getCol() const { return col; }
 
 string Coordinate::toString() const {
-    stringstream ss;
-    ss << "Row: " << row << "\nCol: " << col << "\nIs Valid: " << (valid ? "true" : "false") << "\n";
-    return ss.str();
+    return char(col + int('A')) + std::to_string(row + 1);
 }
 
 bool Coordinate::isValid() const {
     return valid;
 }
 
-Coordinate::Coordinate(int row, int col) : row(row), col(col) {
-    valid = ((0 <= row && row <= 8) && (0 <= col && col <= 8));
-}

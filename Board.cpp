@@ -135,5 +135,84 @@ list<Move> Board::getValidMoves(Coordinate coordinate) const {
 }
 
 void Board::executeMove(Move move) {
+    board[move.coordinate.getRow()][move.coordinate.getCol()] = Square {move.value, true};
+    moveHistory.push_back(move);
+}
+
+Move Board::getUserMove(){
+    string input;
+    while (true){
+        cout << "Specify a coordinate to edit or a command.\n('u' to undo last move, 'd' to display board, 'q' to save and quit)\n>  " << flush;
+        cin >> input;
+        if (input == "q" || input == "Q") {
+            // Command: Save and Quit
+            throw UserAbortException();
+        }
+        else if (input == "u" || input == "U"){
+            // Command: Undo last move // TODO implement this using a Stack data structure. Just figure out how to .pop() the way python do
+//            Move lastMove = moveHistory.
+//            undoMove();
+        } else { // Parse Coordinate
+            unique_ptr<Coordinate> coord(new Coordinate(input));
+            if (!coord->isValid()) {
+                // ERROR invalid coord
+                cout << "ERROR: " << input << " is not a valid coordinate.\n";
+            } else if (!getSquare(*coord).editable){
+                // ERROR square not editable
+                cout << "ERROR: " << coord->toString() << " is not editable.\n";
+            } else {
+                // Square is free game, let's try to get a value for it
+                try {
+                    int value = getUserValue(*coord);
+                    return Move{*coord, value, getSquare(*coord).value};
+                } catch (UserAbortException &e) {
+                    // User decided not to edit this square
+                    continue;
+                }
+            }
+        }
+    }
+}
+
+
+int Board::getUserValue(Coordinate &coordinate) const {
+    string input;
+    while (true){
+        cout << "What number goes in " +  coordinate.toString() + "?\n('s' to see all possible values, 'c' to cancel)\n>  " << flush;
+        // Get the value to be added
+        cin >> input;
+        // Handle alternate commands
+        if (input == "s" || input == "S"){
+            cout << "Valid values for "<< coordinate.toString() << ": " << listValidMoves(getValidMoves(coordinate)) << endl;
+        } else if (input == "c" || input == "C"){
+            throw UserAbortException(); // Throws UserAbortException if user cancels action.
+        } else {
+            // Validate input
+            int value = stoi(input);
+            if (0 <= value && value <= 9) {
+                // We got the move, now let's validate it.
+                Move move = Move {coordinate, value, getSquare(coordinate).value};
+                if (isMoveValid(move))
+                    return value;
+                else
+                    cout << "ERROR: Value " << value << "cannot go into square " << coordinate.toString() << ".\n";
+            } else {
+                cout << "ERROR: Value must be between 0 and 9 (0 to clear the square).\n";
+            }
+        }
+    }
 
 }
+
+string Board::listValidMoves(const list<Move>& moves) {
+    stringstream ss;
+    for (auto move : moves){
+        ss << move.value << ", ";
+    }
+    string output = ss.str();
+    if (output.length() > 1)
+        return output.substr(0, output.length() - 2);
+    else
+        return output;
+}
+

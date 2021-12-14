@@ -10,9 +10,19 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <exception>
 
 using std::list;
 using std::string;
+using std::exception;
+
+struct UserAbortException : public exception
+{
+    const char * what () const noexcept
+    {
+        return "User Cancelled Action";
+    }
+};
 
 struct Move {
     Coordinate coordinate;
@@ -38,14 +48,26 @@ public:
     Square getSquare(Coordinate coordinate) const;
     bool isMoveValid(Move move) const;
     list<Move> getValidMoves(Coordinate coordinate) const;
-    void playTurn(Coordinate coordinate);
+//    void playTurn(Coordinate coordinate);
     void executeMove(Move move);
+    Move getUserMove();
     void undoMove(Move move);
 
 private:
     Square board[9][9]{};
     list<Move> moveHistory;
     void load(const string &filename);
+    /**
+     * Repeatedly prompts the user for a value to go in a given coordinate.
+     * Value is guaranteed to be valid for that coordinate, but will throw
+     * UserAbortException if 'C' is entered instead of a value.
+     * Also calls listValidMoves(getValidMoves()) if user inputs 'S'.
+     * @param coordinate The coordinate at which to enter a value.
+     * @return The user's chosen value for that coordinate.
+     */
+    int getUserValue(Coordinate &coordinate) const;
+
+    static string listValidMoves(const list<Move>& moves);
 };
 
 #endif //WEEK_6_BOARD_H
