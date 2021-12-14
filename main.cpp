@@ -56,6 +56,8 @@ int main() {
         } catch (FileException &fe){
             // File not found
             cout << "Unable to open file \"" << filename << "\"." << endl;
+        } catch (...){
+            cout << "File \"" << filename << "\" corrupted." << endl;
         }
     }
 
@@ -65,7 +67,7 @@ int main() {
         try{
             board->display();
             Move move = board->getUserMove();
-            board->executeMove(move);
+            board->executeMove(move, true);
         } catch (UserAbortException &uae) {
             // User wants to save and quit
             break;

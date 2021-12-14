@@ -14,6 +14,7 @@
 #include <exception>
 
 using std::list;
+using std::stack;
 using std::string;
 using std::exception;
 
@@ -58,18 +59,18 @@ public:
     bool isMoveValid(Move move) const;
     list<Move> getValidMoves(Coordinate coordinate) const;
 //    void playTurn(Coordinate coordinate);
-    void executeMove(Move move);
+    void executeMove(Move move, bool addToHistory);
     /**
      * Prompts the user for a coordinate to edit on the board, then calls
      * getUserValue() to obtain a valid move at a given coordinate.
      * @return The Move the user decided to execute.
      */
     Move getUserMove();
-    void undoMove(Move move);
+    void undoLastMove();
 
 private:
     Square board[9][9]{};
-    list<Move> moveHistory;
+    stack<Move> moveHistory;
     void load(const string &filename);
     /**
      * Repeatedly prompts the user for a value to go in a given coordinate.

@@ -14,7 +14,8 @@ void debug(const string& message){
 
 void Board::display() const {
     string horiz_separator = "   -----+-----+-----\n";
-    cout << "  A B C D E F G H I\n";
+    cout.flush();
+    cout << "\n  A B C D E F G H I\n";
     for (int row = 0; row < 9; row++){
         if (row == 3 || row == 6)
             cout << horiz_separator;
@@ -26,7 +27,7 @@ void Board::display() const {
                 rowString << "|";
             else
                 rowString << " ";
-            if (square.value != 0) // TODO come up with a way to color this square if it's editable or not (or something)
+            if (square.value != 0)
                 rowString << square.value;
             else
                 rowString << " ";
@@ -68,7 +69,7 @@ void Board::load(const string &filename) {
     int iRow = 0;
     // Loop through each line in the file
     while (!f_in.fail()){
-        // TODO Assert iRow < 9
+        assert(iRow <= 9);
         string rowString;
         getline(f_in, rowString, '\n');
 //        debug("rowString: " + rowString);
@@ -78,9 +79,9 @@ void Board::load(const string &filename) {
         // Loop through each token (separated by delim '|') in the line
         int iCol = 0;
         while ((pos = rowString.find(delim)) != string::npos){
-            // TODO Assert iCol < 9
+            assert(iCol <= 9);
             token = rowString.substr(0, pos);
-            // TODO Assert token.length() == 2
+            assert(token.length() == 2);
             Square s = {int(token[0]) - int('0'), token[1] == 't'};
 //            debug("----- Token: " + token + " --- iRow, iCol: " + to_string(iRow) + to_string(iCol));
             board[iRow][iCol] = s;
@@ -135,9 +136,10 @@ list<Move> Board::getValidMoves(Coordinate coordinate) const {
     return validMoves;
 }
 
-void Board::executeMove(Move move) {
+void Board::executeMove(Move move, bool addToHistory) {
     board[move.coordinate.getRow()][move.coordinate.getCol()] = Square {move.value, true};
-    moveHistory.push_back(move);
+    if (addToHistory)
+        moveHistory.push(move);
 }
 
 Move Board::getUserMove(){
@@ -148,12 +150,14 @@ Move Board::getUserMove(){
         if (input == "q" || input == "Q") {
             // Command: Save and Quit
             throw UserAbortException();
-        }
-        else if (input == "u" || input == "U"){
-            // Command: Undo last move // TODO implement this using a Stack data structure. Just figure out how to .pop() the way python do
-//            Move lastMove = moveHistory.
-//            undoMove();
-        } else { // Parse Coordinate
+        } else if (input == "d" || input == "D"){
+            display();
+        } else if (input == "u" || input == "U"){
+            // Command: Undo last move
+            undoLastMove();
+            display();
+        } else {
+            // Parse Coordinate
             unique_ptr<Coordinate> coord(new Coordinate(input));
             if (!coord->isValid()) {
                 // ERROR invalid coord
@@ -215,5 +219,19 @@ string Board::listValidMoves(const list<Move>& moves) {
         return output.substr(0, output.length() - 2);
     else
         return output;
+}
+
+void Board::undoLastMove() {
+    // Handle an empty moveHistory
+    if (moveHistory.empty()){
+        cout << "No moves to undo." << endl;
+        return;
+    }
+    Move lastMove = moveHistory.top();
+    // Undo the move, but don't add it to history.
+    Coordinate lastCoordinate(lastMove.coordinate.getRow(), lastMove.coordinate.getCol());
+    Move undoLastMove = Move {lastCoordinate, lastMove.old_value, lastMove.value};
+    executeMove(undoLastMove, false);
+    moveHistory.pop();
 }
 
