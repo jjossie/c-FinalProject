@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include <exception>
 
 using std::list;
